@@ -1,4 +1,6 @@
 # real_estate
-real estate related finance
+real estate related finance scripts
 
-Buy VS rent script: 
+Buy VS rent pricing model script: `Cost_benefits_buy_VS_rent.py`
+
+Land+building pricing model: `land_building_pricing.py`
