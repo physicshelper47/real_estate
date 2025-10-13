@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
-from Cost_benefits import calculate_buy_vs_rent_with_opportunity_cost
+from Cost_benefits_buy_VS_rent import calculate_buy_vs_rent_with_opportunity_cost
 
 def run_sensitivity_analysis(base_params, price_range, rate_range, key_names=["home_price", "mortgage_rate"]):
     heatmap_data = []

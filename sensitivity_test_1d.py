@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
-from Cost_benefits import calculate_buy_vs_rent_with_opportunity_cost
+from Cost_benefits_buy_VS_rent import calculate_buy_vs_rent_with_opportunity_cost
 
 def scan_1D(scan_range, base_params, param_name):
     heatmap_data = []
