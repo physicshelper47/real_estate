@@ -47,52 +47,58 @@ def calculate_property_valuation(
     Estimate property value based on build quality, structure depreciation,
     land value, land prep, and opportunity costs.
 
-    Args:
-        sqft (float): Structure size in square feet.
-        age (float): Age of the structure in years.
-        tier (str): Build quality tier ('basic', 'mid', 'high').
-        land_size_acres (float): Land area in acres.
-        land_price_per_acre (float): Cost per acre.
-        land_prep_cost (float): Cost to prep the land.
-        opportunity_cost (float): Calculated opportunity cost.
+    Includes:
+    - Structure current value (with age)
+    - Structure new build cost
+    - Total build cost (as new)
+    - Total build with depreciation
+    - Value margin vs market
 
     Returns:
-        dict: Detailed report and all calculated values.
+        dict with detailed values and a human-readable report.
     """
     tier = tier.lower()
     if tier not in HALF_LIFE_BY_TIER or tier not in PRICE_PER_SQFT_BY_TIER:
         raise ValueError("Invalid tier. Use one of: 'basic', 'mid', 'high'.")
 
-    # Lookup constants
+    # Constants lookup
     half_life = HALF_LIFE_BY_TIER[tier]
     price_per_sqft = PRICE_PER_SQFT_BY_TIER[tier]
 
-    # Structure valuation
-    structure_initial_value = sqft * price_per_sqft
+    # Structure values
+    structure_new_value = sqft * price_per_sqft
     depreciation_factor = 0.5 ** (age / half_life)
-    structure_current_value = structure_initial_value * depreciation_factor
+    structure_current_value = structure_new_value * depreciation_factor
 
-    # Land valuation
+    # Land value
     land_value = land_size_acres * land_price_per_acre
 
-    # Final valuations
+    # Market value of property today
     total_market_value = structure_current_value + land_value
-    total_cost_basis = structure_initial_value + land_value + land_prep_cost + opportunity_cost
-    value_margin = total_market_value - total_cost_basis
+
+    # Build cost today (as new)
+    total_build_cost_new = structure_new_value + land_value + land_prep_cost + opportunity_cost
+    # Build cost if structure is aged (hypothetical resale build)
+    total_build_cost_with_decay = structure_current_value + land_value + land_prep_cost + opportunity_cost
+
+    # Value margin (profit/loss vs build new)
+    value_margin = total_market_value - total_build_cost_new
 
     # Text report
     report = f"""\
+
 🏡 Property Valuation Report
-----------------------------
+============================
+
 📐 Structure:
   - Size: {sqft:,} sqft
   - Tier: {tier.capitalize()}
-  - Price per Sqft: ${price_per_sqft}
-  - Initial Value: ${structure_initial_value:,.2f}
-  - Age: {age} years
+  - Price per Sqft (Tier): ${price_per_sqft}
+  - Structure Age: {age} years
   - Half-life: {half_life} years
   - Depreciation Factor: {depreciation_factor:.4f}
-  - Current Value: ${structure_current_value:,.2f}
+  - 🔹 Current Structure Value (aged): ${structure_current_value:,.2f}
+  - 🔸 New Structure Cost (today):     ${structure_new_value:,.2f}
 
 🌱 Land:
   - Size: {land_size_acres} acres
@@ -100,13 +106,14 @@ def calculate_property_valuation(
   - Raw Land Value: ${land_value:,.2f}
   - Land Prep Cost: ${land_prep_cost:,.2f}
 
-💸 Additional Costs:
+💸 Other Costs:
   - Opportunity Cost: ${opportunity_cost:,.2f}
 
---------------------------------------------
-💰 Total Estimated Market Value: ${total_market_value:,.2f}
-🧾 Total Build Cost Basis: ${total_cost_basis:,.2f}
-📈 Value Margin: ${value_margin:,.2f}
+-------------------------------------------------------------
+💰 Total Market Value (Current Structure + Land): ${total_market_value:,.2f}
+🏗️  Total Build Cost (New Structure):              ${total_build_cost_new:,.2f}
+🧱  Total Build w/ Decayed Structure:              ${total_build_cost_with_decay:,.2f}
+📈 Value Margin (Market - New Build):              ${value_margin:,.2f}
 """
 
     return {
@@ -115,7 +122,7 @@ def calculate_property_valuation(
         'tier': tier,
         'price_per_sqft': price_per_sqft,
         'half_life': half_life,
-        'structure_initial_value': structure_initial_value,
+        'structure_new_value': structure_new_value,
         'structure_current_value': structure_current_value,
         'depreciation_factor': depreciation_factor,
         'land_size_acres': land_size_acres,
@@ -123,11 +130,13 @@ def calculate_property_valuation(
         'land_value': land_value,
         'land_prep_cost': land_prep_cost,
         'opportunity_cost': opportunity_cost,
-        'total_property_value': total_market_value,
-        'total_cost_basis': total_cost_basis,
+        'total_market_value': total_market_value,
+        'total_build_cost_new': total_build_cost_new,
+        'total_build_cost_with_decay': total_build_cost_with_decay,
         'value_margin': value_margin,
         'report': report
     }
+
 
 
 # Sample usage
