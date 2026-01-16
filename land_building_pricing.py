@@ -157,11 +157,11 @@ if __name__ == '__main__':
 
     # Final valuation
     result = calculate_property_valuation(
-        sqft=2500,
-        age=5,  #in years
-        tier='mid', #basic, mid, high
-        land_size_acres=12.5,
-        land_price_per_acre=6000,
+        sqft=3715,
+        age=0,  #in years
+        tier='high', #basic, mid, high
+        land_size_acres=7.21,
+        land_price_per_acre=40000,
         land_prep_cost=50000,
         opportunity_cost=opp_cost
     )

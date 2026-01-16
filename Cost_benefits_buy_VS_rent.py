@@ -118,14 +118,14 @@ def plot_opportunity_comparison(df, break_even_year):
 if __name__ == '__main__':
     # === INPUT PARAMETERS ===
     params = {
-        "home_price": 440000,
+        "home_price": 700000,
         "down_payment_percent": 0.05,
-        "mortgage_rate": 0.06,
+        "mortgage_rate": 0.058,
         "loan_term_years": 30,
         "property_tax_rate": 0.0058,
         "maintenance_rate": 0.01,
         "home_appreciation_rate": 0.03,
-        "monthly_rent": 2300,
+        "monthly_rent": 3500,
         "rent_increase_rate": 0.03,
         "household_income": 150000,
         "marginal_tax_rate": 0.24,
@@ -141,6 +141,11 @@ if __name__ == '__main__':
     df.to_csv('tmp.csv')
     # === DISPLAY RESULTS ===
     pd.set_option('display.float_format', '${:,.2f}'.format)
+    pd.set_option('display.max_rows', None)
+    pd.set_option('display.max_columns', None)
+    pd.set_option('display.width', None)
+    pd.set_option('display.max_colwidth', None)
+
     print(df[["Year", "Net Cost of Buying", "Cumulative Rent Cost", "Investment Value", "Equity Built"]])
     print(f"\n📌 Break-even year (with opportunity cost): {break_even_year if break_even_year else 'Never within time horizon'}")
 
